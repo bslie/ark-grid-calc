@@ -40,6 +40,7 @@ export default function Home() {
   const [results, setResults] = useState<SolverResult[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [calculationJustFinished, setCalculationJustFinished] = useState(false);
   const [astrogemFilter, setAstrogemFilter] = useState<AstrogemFilter>("all");
   const [newCharacterName, setNewCharacterName] = useState("");
   const [editingName, setEditingName] = useState(false);
@@ -310,15 +311,24 @@ export default function Home() {
 
   const calculate = useCallback(async () => {
     if (cores.length === 0 || validAstrogems.length === 0) return;
+    setCalculationJustFinished(false);
     setIsCalculating(true);
     setShowResults(false);
+    const minLoadingMs = 450;
+    const start = Date.now();
     try {
       const plainCores = JSON.parse(JSON.stringify(cores)) as Core[];
       const plainGems = JSON.parse(JSON.stringify(validAstrogems)) as Astrogem[];
       const res = solveArkGrid(plainCores, plainGems);
 
+      const elapsed = Date.now() - start;
+      if (elapsed < minLoadingMs) {
+        await new Promise((r) => setTimeout(r, minLoadingMs - elapsed));
+      }
+
       setResults(res);
       setShowResults(true);
+      setCalculationJustFinished(true);
 
       const updatedCores = cores.map((core) => {
         const result = res.find((r) => r.coreId === core.id);
@@ -334,6 +344,8 @@ export default function Home() {
           behavior: "smooth",
         });
       });
+
+      setTimeout(() => setCalculationJustFinished(false), 2000);
     } catch (err) {
       console.error(err);
     } finally {
@@ -438,6 +450,7 @@ export default function Home() {
             onShowAddGemChange={setShowAddGem}
             onCalculate={calculate}
             isCalculating={isCalculating}
+            calculationJustFinished={calculationJustFinished}
             canCalculate={cores.length > 0 && validAstrogems.length > 0}
             showReset={showReset}
             onShowResetChange={setShowReset}

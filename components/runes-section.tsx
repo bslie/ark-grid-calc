@@ -10,7 +10,7 @@ import { ResetDialog } from "@/components/reset-dialog";
 import { CORE_TYPE_LABELS } from "@/lib/arkgrid";
 import type { Core, Astrogem, CoreType } from "@/lib/arkgrid";
 import { cn } from "@/lib/utils";
-import { Plus, Sparkles, Loader2, RotateCcw } from "lucide-react";
+import { Plus, Sparkles, Loader2, RotateCcw, CheckCircle2, Zap, Target } from "lucide-react";
 
 export type AstrogemFilter = "all" | "order" | "chaos";
 
@@ -35,6 +35,7 @@ interface RunesSectionProps {
   onShowAddGemChange: (open: boolean) => void;
   onCalculate: () => void;
   isCalculating: boolean;
+  calculationJustFinished?: boolean;
   canCalculate: boolean;
   showReset: boolean;
   onShowResetChange: (open: boolean) => void;
@@ -56,6 +57,7 @@ export function RunesSection({
   onShowAddGemChange,
   onCalculate,
   isCalculating,
+  calculationJustFinished = false,
   canCalculate,
   showReset,
   onShowResetChange,
@@ -133,6 +135,22 @@ export function RunesSection({
                 </span>
                 <Badge variant="secondary">{totalPoints} оч.</Badge>
               </div>
+              <div className="ml-2 hidden py-1 sm:block" aria-hidden>
+                <div className="flex flex-row items-center gap-4 pl-4 pr-3">
+                  <div className="w-0 flex-none sm:w-40" />
+                  <div className="ml-auto flex items-center gap-2">
+                    <span className="flex w-14 items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
+                      <Zap className="size-3.5 shrink-0" />
+                      Заряды
+                    </span>
+                    <span className="flex w-14 items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
+                      <Target className="size-3.5 shrink-0" />
+                      Очки
+                    </span>
+                    <span className="w-9 shrink-0" aria-hidden />
+                  </div>
+                </div>
+              </div>
               <div className="ml-2 space-y-2">
                 {gems.map((gem) => (
                   <AstrogemRow
@@ -151,6 +169,22 @@ export function RunesSection({
           <div className="space-y-2">
             <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2 font-medium text-amber-700 dark:text-amber-400">
               Не задействованы
+            </div>
+            <div className="ml-2 hidden py-1 sm:block" aria-hidden>
+              <div className="flex flex-row items-center gap-4 pl-4 pr-3">
+                <div className="w-0 flex-none sm:w-40" />
+                <div className="ml-auto flex items-center gap-2">
+                  <span className="flex w-14 items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
+                    <Zap className="size-3.5 shrink-0" />
+                    Заряды
+                  </span>
+                  <span className="flex w-14 items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
+                    <Target className="size-3.5 shrink-0" />
+                    Очки
+                  </span>
+                  <span className="w-9 shrink-0" aria-hidden />
+                </div>
+              </div>
             </div>
             <div className="ml-2 space-y-2">
               {runesGroupedForDisplay.unassigned.map((gem) => (
@@ -201,12 +235,21 @@ export function RunesSection({
           onClick={onCalculate}
           disabled={!canCalculate || isCalculating}
           size="lg"
-          className="shadow-md hover:shadow-lg transition-all"
+          className={cn(
+            "shadow-md hover:shadow-lg transition-all duration-300",
+            calculationJustFinished &&
+              "bg-emerald-600 text-white hover:bg-emerald-700 border-emerald-600"
+          )}
         >
           {isCalculating ? (
             <>
               <Loader2 className="mr-2 size-5 animate-spin" />
               Расчёт…
+            </>
+          ) : calculationJustFinished ? (
+            <>
+              <CheckCircle2 className="mr-2 size-5 animate-pulse" />
+              Готово!
             </>
           ) : (
             <>

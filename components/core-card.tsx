@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { Core, Astrogem, CoreRarity, CoreType } from "@/lib/arkgrid";
 import {
   CORE_CONFIG,
@@ -23,8 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { cn } from "@/lib/utils";
-import { GripVertical, Trash2 } from "lucide-react";
+import { GripVertical, Trash2, Zap, Target } from "lucide-react";
 import { CATEGORY_LABELS } from "@/lib/arkgrid";
 import Image from "next/image";
 
@@ -227,11 +229,13 @@ function DraggableGemItem({
       >
         {CATEGORY_LABELS[gem.category]}
       </span>
-      <span className="text-xs text-muted-foreground">
-        {gem.willpower}⚡
+      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+        <Zap className="size-3.5 shrink-0" />
+        {gem.willpower}
       </span>
-      <span className="text-xs font-medium text-foreground">
-        {gem.points}п
+      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+        <Target className="size-3.5 shrink-0" />
+        {gem.points}
       </span>
       <Button
         variant="ghost"
@@ -258,6 +262,7 @@ export function CoreCard({
   resultAstrogems,
   showResults,
 }: CoreCardProps) {
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
   const displayAstrogems = resultAstrogems ?? core.astrogems;
   const currentWillpower = calculateTotalWillpower(displayAstrogems);
   const currentPoints = calculateTotalPoints(displayAstrogems);
@@ -358,13 +363,21 @@ export function CoreCard({
             variant="ghost"
             size="icon"
             className="shrink-0 text-muted-foreground transition-all hover:scale-110 hover:text-destructive"
-            onClick={onRemove}
+            onClick={() => setShowRemoveConfirm(true)}
             aria-label="Удалить ядро"
           >
             <Trash2 className="size-4" />
           </Button>
         </div>
       </CardHeader>
+      <ConfirmDialog
+        open={showRemoveConfirm}
+        onOpenChange={setShowRemoveConfirm}
+        title="Удалить ядро?"
+        description="Ядро и все назначенные на него руниты будут удалены. Это действие нельзя отменить."
+        confirmLabel="Удалить"
+        onConfirm={onRemove}
+      />
 
       <CardContent className="relative space-y-4 pt-0">
         {/* Редкость */}
