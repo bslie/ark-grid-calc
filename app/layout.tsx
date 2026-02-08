@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Калькулятор Созвездия А.Р.К.| Lost Ark",
   description:
-    "Калькуляция и оптимизация назначения астрокамней по ядрам Созвездия А.Р.К. для достижения максимальных эффектов ядра в Lost Ark.",
+    "Калькуляция и оптимизация назначения рунитов по ядрам Созвездия А.Р.К. для достижения максимальных эффектов ядра в Lost Ark.",
 };
 
 export default function RootLayout({

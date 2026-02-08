@@ -50,7 +50,7 @@ export function CharactersDialog({
         <DialogHeader>
           <DialogTitle>Персонажи</DialogTitle>
           <DialogDescription>
-            Переключение между персонажами. У каждого свой набор ядер и астрокамней.
+            Переключение между персонажами. У каждого свой набор ядер и рунитов.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">

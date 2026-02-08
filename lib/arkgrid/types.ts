@@ -8,7 +8,7 @@ export type CoreType =
   | "Chaos of the Sun"
   | "Chaos of the Moon"
   | "Chaos of the Star";
-/** Категория астрокамня: Порядок или Хаос */
+/** Категория рунитов: Порядок или Хаос */
 export type AstrogemCategory = "Order" | "Chaos";
 
 export interface Astrogem {
